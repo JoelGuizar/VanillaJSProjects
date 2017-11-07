@@ -4,30 +4,33 @@ const cities = [];
 const prom = fetch(endpoint)
   //you have to tell it what type of data it is getting
   //raw data -> JSON, returns promise
-  .then(blob => blob.json)
+  .then(blob => blob.json())
   //spead operator auto-fills
   .then(data => cities.push(...data))
 
-function findMathes(searchTerm, cities) {
+function findMatches(searchTerm, cities) {
   return cities.filter(place => {
     //new regex, with any searchTerm inputted, with a global (g) match and insensitive (i)
-    const regex = new RegExp(wordToMath, 'gi');
+    const regex = new RegExp(searchTerm, 'gi');
     return place.city.match(regex) || place.state.match(regex)
   })
 }
 
+function numberWithCommas(x){
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 function displayMatches(){
-  const matchArray = findMatches(this.value.cities);
+  const matchArray = findMatches(this.value, cities);
   const html = matchArray.map(place => {
     const regex = new RegExp(this.value, 'gi');
     const cityName = place.city.replace(regex, `<span class="h1"> ${this.value}</span>`)
-
-    const 
+    const stateName = place.state.replace(regex, `<span class="h1"> ${this.value}</span>`)
 
     return `
       <li>
-        <span class="name"> ${place.city}, ${place.state} </span>
-        <span class="population"> ${place.population} </span>
+        <span class="name"> ${cityName}, ${stateName} </span>
+        <span class="population"> ${numberWithCommas(place.population)} </span>
       </li>
     `
   }).join('');
